@@ -1,0 +1,53 @@
+<beans:beans 
+   xmlns="http://www.springframework.org/schema/security" 
+   xmlns:beans="http://www.springframework.org/schema/beans" 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:context="http://www.springframework.org/schema/context"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                  http://www.springframework.org/schema/beans/spring-beans.xsd 
+                  http://www.springframework.org/schema/security 
+                  http://www.springframework.org/schema/security/spring-security.xsd
+                  http://www.springframework.org/schema/context
+    			  http://www.springframework.org/schema/context/spring-context.xsd">
+                  
+                  <context:component-scan base-package="org.shgov" />
+                  
+                  <beans:bean id="customLoginSuccess" class="org.shgov.security.CustomLoginSuccess"></beans:bean>
+                  <beans:bean id="customAccessDenied" class="org.shgov.security.CustomAccessDenied"></beans:bean>
+                  <beans:bean id="customPasswordEncoder" class="org.shgov.security.CustomPasswordEncoder"></beans:bean>
+                  <beans:bean id="customUserDetailService" class="org.shgov.security.CustomUserDetailService"></beans:bean>
+                  <beans:bean id="bcrypt" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></beans:bean>
+                  <beans:bean id="loginFailureHandler" class="org.shgov.security.LoginFailureHandler">
+					    <beans:property name="loginidname" value="userId"/>
+					    <beans:property name="loginpwdname" value="userPassword"/>
+					    <beans:property name="errormsgname" value="ERRORMSG"/>
+					    <beans:property name="defaultFailureUrl" value="/member/login?error"/>
+					</beans:bean>
+                  
+                  
+                  
+                  <http auto-config='true'> 
+                  <intercept-url pattern="/admin/*" access="hasRole('ROLE_ADMIN')"/>
+                  <intercept-url pattern="/board/*" access="permitAll"/>
+                  <intercept-url pattern="/member/register" access="permitAll"/>
+                  <intercept-url pattern="/member/login" access="permitAll"/>
+                  <intercept-url pattern="/member/myPage" access="hasAnyRole('ROLE_MEMBER','ROLE_ADMIN')"/>
+                  <form-login
+					login-page="/member/login"
+					login-processing-url="/login"
+					authentication-success-handler-ref="customLoginSuccess"
+					authentication-failure-handler-ref="loginFailureHandler"
+					username-parameter="userId"
+					password-parameter="userPassword"/>
+					<access-denied-handler ref="customAccessDenied"/>
+					<logout logout-url="/member/logout" invalidate-session="true"/>   
+					<csrf/>
+				 </http>
+				
+				<authentication-manager> 
+					 <authentication-provider user-service-ref="customUserDetailService">
+					 	<password-encoder ref="bcrypt" hash="bcrypt"/>
+					 </authentication-provider> 
+				 </authentication-manager>
+                  
+</beans:beans>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD SQL Map Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+ <typeAliases>
+    <typeAlias type="org.shgov.domain.Board" alias="Board"/>   
+    <typeAlias type="org.shgov.domain.User" alias="User"/>   
+    <typeAlias type="org.shgov.domain.UserForm" alias="UserForm"/>   
+    <typeAlias type="org.shgov.domain.Role" alias="Role"/>   
+    <typeAlias type="org.shgov.domain.File" alias="File"/>   
+    <typeAlias type="org.shgov.domain.MappingFileBoard" alias="MFB"/>   
+  </typeAliases>
+
+</configuration>

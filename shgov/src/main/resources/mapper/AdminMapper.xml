@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Admin">
+	<update id="approveUser">
+		UPDATE shgov.user
+		   SET userApproved = 1
+		 WHERE userId = #{userId}
+	</update>
+	
+	<update id="approveUserRole">
+		UPDATE shgov.role
+		   SET userRole = 'ROLE_MEMBER'
+		 WHERE userId = #{userId}
+	</update>
+	
+	<update id="banUser">
+		UPDATE shgov.user
+		   SET userAvailable = 1
+		 WHERE userId = #{userId}
+	</update>
+
+	<update id="banUserRole">
+		UPDATE shgov.role
+		   SET userRole = 'ROLE_BAN'
+		 WHERE userId = #{userId}
+	</update>
+	
+	<update id="resetPassword">
+		UPDATE shgov.user
+		   SET userPassword = #{userPassword}
+		 WHERE userId = #{userId}
+	</update>
+	
+	<insert id="boardInsert">
+		INSERT INTO shgov.board(
+				    boardNum
+				   ,boardTitle
+				   ,boardContent
+				   ,boardWriter
+				   ,boardCreatedAt
+				   ,boardType
+		) VALUES (
+				  #{boardNum}
+				 ,#{boardTitle}
+				 ,#{boardContent}
+				 ,#{boardWriter}
+				 ,default
+				 ,#{boardType}
+		)
+	</insert>
+	
+	<insert id="fileInsert">
+		INSERT INTO shgov.file(
+				    fileNum
+				   ,fileName
+				   ,fileServerName
+				   ,filePath
+		) VALUES (
+				  #{fileNum}
+				 ,#{fileName}
+				 ,#{fileServerName}
+				 ,#{filePath}
+		)
+	</insert>
+	
+	<insert id="MappingInsert">
+		INSERT INTO shgov.mapping_file_board(
+				    fileNum
+				   ,boardNum
+		) VALUES (
+				  #{fileNum}
+				 ,#{boardNum}
+		)
+	</insert>
+	
+	<select id="fileSelect" resultType="File">
+	SELECT a.fileNum            
+	      ,fileName            
+	      ,fileServerName            
+	      ,filePath   
+	  FROM shgov.file a
+	  LEFT JOIN shgov.mapping_file_board b
+	  ON a.fileNum = b.fileNum
+	  LEFT JOIN shgov.board c
+	  ON b.boardNum = c.boardNum
+	  WHERE c.boardNum = #{boardNum}
+</select>
+
+</mapper>

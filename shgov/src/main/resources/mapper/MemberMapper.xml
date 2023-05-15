@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Member">
+
+	<insert id="registerUser" parameterType="UserForm">
+		INSERT INTO shgov.user (
+				    userNum
+				   ,userId
+				   ,userName
+				   ,userPassword
+				   ,userApproved
+				   ,userAvailable
+		) VALUES (
+				  #{userNum}
+				 ,#{userId}
+				 ,#{userName}
+				 ,#{userPassword}
+				 ,default
+				 ,default
+		)
+		
+	</insert>
+	
+	<insert id="registerRole" parameterType="Role">
+		INSERT INTO shgov.role (
+				   userId
+		) VALUES (
+				  #{userId}
+		)
+		
+	</insert>
+	
+	
+	 <resultMap type="User" id="memberMap">
+		<result property="userNum" column="userNum"/>
+		<result property="userId" column="userId"/>
+		<result property="userName" column="userName"/>
+		<result property="userPassword" column="userPassword"/>
+		<result property="userApproved" column="userApproved"/>
+		<result property="userAvailable" column="userAvailable"/>
+		<collection property="authList" resultMap="authMap"/>
+	</resultMap>
+	<resultMap type="Role" id="authMap">
+		<result property="userId" column="userId"/>
+		<result property="userRole" column="userRole"/>	
+	</resultMap>
+	
+	<select id="read" resultMap="memberMap">
+		SELECT userNum
+			 , a.userId
+		     , userName
+		     , userPassword
+		     , userApproved
+		     , userAvailable
+		     , b.userRole
+		  FROM user a
+     LEFT JOIN role b
+            ON a.userid = b.userid
+		 WHERE a.userid=#{userId}
+	</select>
+	
+	<update id="updateUser">
+		UPDATE shgov.user
+		SET userId = #{userId}
+		   ,userName = #{userName}
+		   ,userPassword =#{userPassword}
+		WHERE userId = #{userId}
+	</update>
+	
+	<select id="selectAllUser" resultMap="memberMap">
+		SELECT userNum
+			 , a.userId
+		     , userName
+		     , userPassword
+		     , userApproved
+		     , userAvailable
+		     , b.userRole
+		  FROM user a
+     LEFT JOIN role b
+            ON a.userid = b.userid
+	</select>
+
+</mapper>
