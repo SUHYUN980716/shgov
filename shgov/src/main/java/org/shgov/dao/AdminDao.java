@@ -13,7 +13,7 @@ public class AdminDao {
 	@Autowired
 	public SqlSession sql;
 	 
-	public static final String namespace = "Admin.";
+	public static final String namespace = "Admin."; 
 	
 
 	public int approveUser(String userId) {
